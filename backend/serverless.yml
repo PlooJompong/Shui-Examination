@@ -1,0 +1,58 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: ploodev
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: backend
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  deployments: direct
+  region: eu-north-1
+  iam:
+    role:
+      statements:
+        - effect: allow
+          actions:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          resource: '*'
+
+build:
+  esbuild:
+    minify: true
+
+package:
+  individually: true
+
+functions:
+  getAllMsg:
+    handler: functions/getAllMsg/getAllMsg.handler
+    events:
+      - httpApi:
+          path: /messages
+          method: get
+
+  getOneMsg:
+    handler: functions/getOneMsg/getOneMsg.handler
+    events:
+      - httpApi:
+          path: /messages/{id}
+          method: get
+
+  postNewMsg:
+    handler: functions/postNewMsg/postNewMsg.handler
+    events:
+      - httpApi:
+          path: /messages
+          method: post
+
+  updateMsg:
+    handler: functions/updateMsg/updateMsg.handler
+    events:
+      - httpApi:
+          path: /messages/{id}
+          method: put
