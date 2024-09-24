@@ -1,7 +1,6 @@
 const { sendResponse, sendError } = require("../../responses/index");
 const { db } = require("../../services/db");
-const { UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
-const { reorderObject } = require("../../services/utilities")
+const { DeleteCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 exports.handler = async (event) => {
   try {
@@ -20,22 +19,12 @@ exports.handler = async (event) => {
       return sendError(404, "messageId not found!")
     }
 
-    const body = JSON.parse(event.body)
-
-    const result = await db.send(new UpdateCommand({
+    await db.send(new DeleteCommand({
       TableName: "Messages",
-      Key: { id: messageId },
-      UpdateExpression: "set message = :message",
-      ExpressionAttributeValues: {
-        ":message": body.message
-      },
-      ReturnValues: "ALL_NEW"
+      Key: { id: messageId }
     }))
 
-
-    const updateMessage = reorderObject(result.Attributes)
-
-    return sendResponse({ updateMessage })
+    return sendResponse({ message: `Message with id ${messageId} deleted!` })
 
   } catch (error) {
     return sendError(500, error)

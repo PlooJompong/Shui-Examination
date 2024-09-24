@@ -19,7 +19,9 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: '*'
+          Resource:
+            - arn:aws:dynamodb:eu-north-1:571600828520:table/Messages
+            - arn:aws:dynamodb:eu-north-1:571600828520:table/Messages/index/userName-index
 
 build:
   esbuild:
@@ -34,25 +36,55 @@ functions:
     events:
       - httpApi:
           path: /messages
-          method: get
+          method: GET
 
-  getOneMsg:
-    handler: functions/getOneMsg/getOneMsg.handler
+  getUserMsg:
+    handler: functions/getUserMsg/getUserMsg.handler
     events:
       - httpApi:
           path: /messages/{id}
-          method: get
+          method: GET
 
   postNewMsg:
     handler: functions/postNewMsg/postNewMsg.handler
     events:
       - httpApi:
           path: /messages
-          method: post
+          method: POST
 
   updateMsg:
     handler: functions/updateMsg/updateMsg.handler
     events:
       - httpApi:
           path: /messages/{id}
-          method: put
+          method: PUT
+
+  deleteMsg:
+    handler: functions/deleteMsg/deleteMsg.handler
+    events:
+      - httpApi:
+          path: /messages/{id}
+          method: DELETE
+
+resources:
+  Resources:
+    Messages:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Messages
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+          - AttributeName: 'userName'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: 'userName-index'
+            KeySchema:
+              - AttributeName: 'userName'
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST

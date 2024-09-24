@@ -1,5 +1,3 @@
-const { error } = require("console");
-
 function sendResponse(data) {
   return {
     statusCode: 200,
