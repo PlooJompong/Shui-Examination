@@ -9,6 +9,10 @@ exports.handler = async () => {
       TableName: "Messages"
     }));
 
+    if (!messages.Items.length) {
+      return sendError(404, "No messages found!")
+    }
+
     const processedMessages = processMessages(messages.Items);
     const sortedMessages = processedMessages.sort((a, b) => b.createAt - a.createAt);
     const formattedMessages = formatMessages(sortedMessages);
