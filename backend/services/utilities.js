@@ -1,6 +1,3 @@
-// const { sendError } = require("../responses/index");
-// const { db } = require("./db");
-// const { ScanCommand } = require("@aws-sdk/lib-dynamodb");
 const { format } = require("date-fns");
 
 const reorderObject = (item) => {
@@ -12,8 +9,35 @@ const reorderObject = (item) => {
   };
 };
 
-function getCurrentTime() {
-  return format(new Date(), 'dd-MM-yyyy HH:mm:ss');
+const getCurrentTime = () => {
+  return format(new Date(), 'dd-MM-yyyy HH:mm');
 }
 
-module.exports = { reorderObject, getCurrentTime };
+const formatDateString = (date) => {
+  return format(date, 'dd-MM-yyyy HH:mm');
+}
+
+const parseDate = (dateStr) => {
+  const [day, month, yearAndTime] = dateStr.split('-');
+  const [year, time] = yearAndTime.split(' ');
+  return new Date(`${year}-${month}-${day}T${time}`);
+}
+
+const processMessages = (items) => {
+  return items.map(item => {
+    const reordered = reorderObject(item);
+    return {
+      ...reordered,
+      createAt: parseDate(reordered.createAt)
+    };
+  });
+};
+
+const formatMessages = (messages) => {
+  return messages.map(item => ({
+    ...item,
+    createAt: formatDateString(item.createAt)
+  }));
+};
+
+module.exports = { reorderObject, getCurrentTime, parseDate, formatDateString, processMessages, formatMessages };

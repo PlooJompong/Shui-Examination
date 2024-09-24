@@ -1,19 +1,21 @@
 const { sendResponse, sendError } = require("../../responses/index");
 const { db } = require("../../services/db");
 const { ScanCommand } = require("@aws-sdk/lib-dynamodb");
-const { reorderObject } = require("../../services/utilities");
+const { formatMessages, processMessages } = require("../../services/utilities");
 
 exports.handler = async () => {
   try {
     const messages = await db.send(new ScanCommand({
       TableName: "Messages"
-    }))
+    }));
 
-    const reorderMessages = messages.Items.map(reorderObject)
+    const processedMessages = processMessages(messages.Items);
+    const sortedMessages = processedMessages.sort((a, b) => b.createAt - a.createAt);
+    const formattedMessages = formatMessages(sortedMessages);
 
-    return sendResponse({ messages: reorderMessages })
+    return sendResponse({ messages: formattedMessages });
 
   } catch (error) {
-    return sendError(500, error)
+    return sendError(500, error);
   }
-}
+};

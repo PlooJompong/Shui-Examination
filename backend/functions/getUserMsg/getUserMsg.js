@@ -1,7 +1,7 @@
 const { sendResponse, sendError } = require("../../responses/index");
 const { db } = require("../../services/db");
 const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
-const { reorderObject } = require("../../services/utilities")
+const { formatMessages, processMessages } = require("../../services/utilities");
 
 exports.handler = async (event) => {
   try {
@@ -20,13 +20,15 @@ exports.handler = async (event) => {
       }
     }))
 
-    if (userMessages.Items.length === 0) {
-      return sendError(404, "Username not found!")
+    if (!userMessages.Items.length) {
+      return sendError(404, `No messages found for user ${userName}`)
     }
 
-    const reorderMessage = userMessages.Items.map(item => reorderObject(item))
+    const processedMessages = processMessages(userMessages.Items);
+    const sortedMessages = processedMessages.sort((a, b) => b.createAt - a.createAt);
+    const formattedMessages = formatMessages(sortedMessages);
 
-    return sendResponse({ messages: reorderMessage })
+    return sendResponse({ messages: formattedMessages });
 
   } catch (error) {
     return sendError(500, error)
