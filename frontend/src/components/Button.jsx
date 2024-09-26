@@ -1,10 +1,13 @@
-const Button = ({ title, onClick, className }) => {
+const Button = ({ onClick, className, children, ...props }) => {
+  const defaultPadding = !className?.includes('p-') ? 'px-4 py-2' : '';
+
   return (
     <button
-      className={`rounded px-4 py-2 text-base font-bold hover:opacity-95 ${className}`}
+      className={`rounded text-base font-bold hover:opacity-95 ${defaultPadding} ${className}`}
       onClick={onClick}
+      {...props}
     >
-      {title}
+      {children}
     </button>
   );
 };
