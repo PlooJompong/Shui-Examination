@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from './Button.jsx';
 import axios from 'axios';
 
@@ -34,6 +34,16 @@ const NewMessage = ({ fetchData }) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (status.success) {
+      const timer = setTimeout(() => {
+        setStatus((prevStatus) => ({ ...prevStatus, success: null }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [status.success]);
 
   const renderInput = (label, name, value, placeholder, type = 'text') => (
     <>

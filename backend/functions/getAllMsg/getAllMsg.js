@@ -10,7 +10,7 @@ exports.handler = async () => {
     }));
 
     if (!messages.Items.length) {
-      return sendError(404, "No messages found!")
+      return sendResponse({ messages: [] })
     }
 
     const processedMessages = processMessages(messages.Items);

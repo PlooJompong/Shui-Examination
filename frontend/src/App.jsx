@@ -17,12 +17,13 @@ const App = () => {
 
       if (data?.data?.messages) {
         setData(data.data.messages);
+        setError(null);
       } else {
         setData([]);
         setError('No messages found');
       }
-    } catch (err) {
-      setError(err.response?.data?.message || err.message);
+    } catch (error) {
+      setError(error.response?.data?.message || error.message);
     }
   };
 

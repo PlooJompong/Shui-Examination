@@ -20,7 +20,6 @@ const ListItems = ({ data = [], error, fetchData }) => {
         await axios.delete(
           `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
         );
-
         fetchData();
       } catch (error) {
         console.error(error);
@@ -34,27 +33,36 @@ const ListItems = ({ data = [], error, fetchData }) => {
       ...prev,
       [id]: !prev[id],
     }));
+
+    const currentMessage = data.find((item) => item.id === id)?.message || '';
     setEditedMessages((prev) => ({
       ...prev,
-      [id]: data.find((item) => item.id === id)?.message || '',
+      [id]: currentMessage,
     }));
   };
 
   const handleSaveMessage = useCallback(
     async (id) => {
-      try {
-        await axios.put(
-          `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
-          { message: editedMessages[id] },
-        );
-        setEditingMessages((prev) => ({ ...prev, [id]: false }));
+      const originalMessage = data.find((item) => item.id === id)?.message;
+      const editedMessage = editedMessages[id];
 
-        fetchData();
-      } catch (error) {
-        console.error('Error saving message:', error);
+      if (editedMessage !== originalMessage && editedMessage.trim() !== '') {
+        try {
+          await axios.put(
+            `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
+            { message: editedMessage },
+          );
+
+          setEditingMessages((prev) => ({ ...prev, [id]: false }));
+          fetchData();
+        } catch (error) {
+          console.error('Error saving message:', error);
+        }
+      } else {
+        setEditingMessages((prev) => ({ ...prev, [id]: false }));
       }
     },
-    [editedMessages, fetchData],
+    [editedMessages, data, fetchData],
   );
 
   const renderActionButtons = useCallback(
@@ -136,7 +144,7 @@ const ListItems = ({ data = [], error, fetchData }) => {
   }
 
   if (!data.length) {
-    return <p>No messages found</p>;
+    return <h2 className="mt-4 text-3xl text-white">No messages found</h2>;
   }
 
   return (
