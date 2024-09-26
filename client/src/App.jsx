@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import ListItems from './components/ListItems.jsx';
 import NewMessage from './components/NewMessage.jsx';
+import SearchUserMessage from './components/SearchUserMessage.jsx';
 import axios from 'axios';
+import Button from './components/Button.jsx';
 
 const App = () => {
+  const [toggle, setToggle] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
@@ -24,7 +26,13 @@ const App = () => {
       }
     } catch (error) {
       setError(error.response?.data?.message || error.message);
+      setData([]);
     }
+  };
+
+  const handleToggle = () => {
+    setToggle(!toggle);
+    fetchAllMsg();
   };
 
   useEffect(() => {
@@ -33,8 +41,18 @@ const App = () => {
 
   return (
     <main className="max-w-screen-xxl flex min-h-screen flex-col items-center justify-center bg-blue-950 p-5">
-      <NewMessage fetchData={fetchAllMsg} />
-      <ListItems data={data} error={error} fetchData={fetchAllMsg} />
+      <Button
+        onClick={handleToggle}
+        className="mb-2 bg-indigo-500 text-white hover:bg-indigo-600"
+      >
+        {!toggle ? 'Search User Message' : 'New Message'}
+      </Button>
+
+      {!toggle ? (
+        <NewMessage data={data} error={error} fetchData={fetchAllMsg} />
+      ) : (
+        <SearchUserMessage fetchData={fetchAllMsg} />
+      )}
     </main>
   );
 };

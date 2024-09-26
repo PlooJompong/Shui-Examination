@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Button from './Button.jsx';
 import axios from 'axios';
+import ListItems from './ListItems.jsx';
 
-const NewMessage = ({ fetchData }) => {
+const NewMessage = ({ data, error, fetchData }) => {
   const [formData, setFormData] = useState({ userName: '', message: '' });
   const [status, setStatus] = useState({ success: null, error: null });
 
@@ -39,7 +40,7 @@ const NewMessage = ({ fetchData }) => {
     if (status.success) {
       const timer = setTimeout(() => {
         setStatus((prevStatus) => ({ ...prevStatus, success: null }));
-      }, 3000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
@@ -70,33 +71,40 @@ const NewMessage = ({ fetchData }) => {
   );
 
   return (
-    <section className="flex w-full max-w-[25rem] flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold text-white">New Message</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-full flex-col sm:min-w-[25rem]"
-      >
-        <textarea
-          name="message"
-          className="mt-4 min-h-64 w-full rounded-md px-5 py-5 text-lg"
-          placeholder="Enter your message"
-          value={formData.message}
-          onChange={handleInputChange}
-        />
+    <>
+      <section className="flex w-full max-w-[25rem] flex-col items-center justify-center">
+        <h1 className="text-center text-3xl font-bold text-white">
+          New Message
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full flex-col sm:min-w-[25rem]"
+        >
+          <textarea
+            name="message"
+            className="mt-4 min-h-64 w-full rounded-md px-5 py-5 text-lg"
+            placeholder="Enter your message"
+            value={formData.message}
+            onChange={handleInputChange}
+          />
 
-        {renderInput(
-          'Enter username:',
-          'userName',
-          formData.userName,
-          'Username',
-        )}
+          {renderInput(
+            'Enter username:',
+            'userName',
+            formData.userName,
+            'Username',
+          )}
 
-        {status.error && <p className="mt-1 text-red-500">{status.error}</p>}
-        {status.success && (
-          <p className="mt-1 text-green-500">{status.success}</p>
-        )}
-      </form>
-    </section>
+          {status.error && (
+            <p className="mt-1 text-center text-red-500">{status.error}</p>
+          )}
+          {status.success && (
+            <p className="mt-1 text-center text-green-500">{status.success}</p>
+          )}
+        </form>
+      </section>
+      <ListItems data={data} error={error} fetchData={fetchData} />
+    </>
   );
 };
 

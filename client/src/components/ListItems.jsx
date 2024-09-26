@@ -140,11 +140,7 @@ const ListItems = ({ data = [], error, fetchData }) => {
   };
 
   if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  if (!data.length) {
-    return <h2 className="mt-4 text-3xl text-white">No messages found</h2>;
+    return <p className="mt-2 text-red-500">{error}</p>;
   }
 
   return (
