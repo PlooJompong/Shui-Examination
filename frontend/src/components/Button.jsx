@@ -1,5 +1,5 @@
 const Button = ({ onClick, className, children, ...props }) => {
-  const defaultPadding = !className?.includes('p-') ? 'px-4 py-2' : '';
+  const defaultPadding = !className?.includes('p-') ? 'px-2 py-1' : '';
 
   return (
     <button

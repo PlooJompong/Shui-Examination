@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Button from './components/Button.jsx';
 import ListItems from './components/ListItems.jsx';
+import NewMessage from './components/NewMessage.jsx';
 import axios from 'axios';
 
 const App = () => {
@@ -32,13 +32,8 @@ const App = () => {
 
   return (
     <main className="max-w-screen-xxl flex min-h-screen flex-col items-center justify-center bg-blue-950 p-5">
-      <Button
-        onClick={fetchAllMsg}
-        className="bg-white hover:bg-gray-400 hover:text-white"
-      >
-        Fetch all messages
-      </Button>
-      <ListItems data={data} error={error} />
+      <NewMessage fetchData={fetchAllMsg} />
+      <ListItems data={data} error={error} fetchData={fetchAllMsg} />
     </main>
   );
 };

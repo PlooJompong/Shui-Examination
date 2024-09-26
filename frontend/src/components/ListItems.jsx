@@ -1,8 +1,11 @@
 import { useState, useCallback } from 'react';
 import Button from './Button.jsx';
+import axios from 'axios';
 
-const ListItems = ({ data = [], error }) => {
+const ListItems = ({ data = [], error, fetchData }) => {
   const [expandedMessages, setExpandedMessages] = useState({});
+  const [editingMessages, setEditingMessages] = useState({});
+  const [editedMessages, setEditedMessages] = useState({});
 
   const handleToggleMessage = useCallback((id) => {
     setExpandedMessages((prev) => ({
@@ -11,23 +14,103 @@ const ListItems = ({ data = [], error }) => {
     }));
   }, []);
 
-  const renderActionButtons = useCallback(
-    () => (
-      <>
-        <Button className="bg-gray-300 text-gray-800 hover:bg-gray-400">
-          Edit
-        </Button>
-        <Button className="ml-2 bg-red-400 text-white hover:bg-red-600">
-          Delete
-        </Button>
-      </>
-    ),
-    [],
+  const handleDeleteMessage = useCallback(
+    async (id) => {
+      try {
+        await axios.delete(
+          `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
+        );
+
+        fetchData();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [fetchData],
   );
 
-  const renderMessage = (message, id) => {
+  const handleEditMessage = (id) => {
+    setEditingMessages((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+    setEditedMessages((prev) => ({
+      ...prev,
+      [id]: data.find((item) => item.id === id)?.message || '',
+    }));
+  };
+
+  const handleSaveMessage = useCallback(
+    async (id) => {
+      try {
+        await axios.put(
+          `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
+          { message: editedMessages[id] },
+        );
+        setEditingMessages((prev) => ({ ...prev, [id]: false }));
+
+        fetchData();
+      } catch (error) {
+        console.error('Error saving message:', error);
+      }
+    },
+    [editedMessages, fetchData],
+  );
+
+  const renderActionButtons = useCallback(
+    (id, isEditing) => (
+      <>
+        {isEditing ? (
+          <>
+            <Button
+              className="bg-green-400 text-white hover:bg-green-600"
+              onClick={() => handleSaveMessage(id)}
+            >
+              Save
+            </Button>
+            <Button
+              className="ml-2 bg-gray-300 text-gray-800 hover:bg-gray-400"
+              onClick={() => handleEditMessage(id)}
+            >
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              className="bg-gray-300 text-gray-800 hover:bg-gray-400"
+              onClick={() => handleEditMessage(id)}
+            >
+              Edit
+            </Button>
+            <Button
+              className="ml-2 bg-red-400 text-white hover:bg-red-600"
+              onClick={() => handleDeleteMessage(id)}
+            >
+              Delete
+            </Button>
+          </>
+        )}
+      </>
+    ),
+    [handleSaveMessage, handleEditMessage, handleDeleteMessage],
+  );
+
+  const renderMessage = (message, id, isEditing) => {
     const isExpanded = expandedMessages[id];
     const shouldTruncate = message.length > 80;
+
+    if (isEditing) {
+      return (
+        <textarea
+          className="h-28 w-full rounded-md border p-1"
+          value={editedMessages[id] || ''}
+          onChange={(e) =>
+            setEditedMessages((prev) => ({ ...prev, [id]: e.target.value }))
+          }
+        />
+      );
+    }
 
     return (
       <div>
@@ -57,22 +140,26 @@ const ListItems = ({ data = [], error }) => {
   }
 
   return (
-    <section className="mt-4 flex flex-wrap items-start justify-center gap-4">
-      {data.map(({ id, message, userName, createAt }) => (
-        <div
-          key={id}
-          className="flex min-h-64 w-96 flex-col gap-3 rounded-md bg-white px-5 py-4 text-lg"
-        >
-          <p className="mb-4 text-sm text-gray-500">{createAt}</p>
-          {renderMessage(message, id)}
-          <div className="mt-auto flex items-center">
-            <p className="mr-auto italic">
-              <strong>{userName}</strong>
-            </p>
-            {renderActionButtons()}
+    <section className="mt-4 flex w-full flex-wrap items-start justify-center gap-4">
+      {data.map(({ id, message, userName, createAt }) => {
+        const isEditing = editingMessages[id];
+
+        return (
+          <div
+            key={id}
+            className="text-80 min-w-lg flex min-h-56 w-full max-w-[25rem] flex-col rounded-md bg-white px-5 py-4 sm:max-w-[25rem]"
+          >
+            <p className="mb-4 text-sm text-gray-500">{createAt}</p>
+            {renderMessage(message, id, isEditing)}
+            <div className="mt-auto flex items-center">
+              <p className="mr-auto italic">
+                <strong>{userName}</strong>
+              </p>
+              {renderActionButtons(id, isEditing)}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 };
