@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import ListItems from './ListItems.jsx';
 import Button from './Button.jsx';
 import axios from 'axios';
-import ListItems from './ListItems.jsx';
+import { FaMagnifyingGlass } from 'react-icons/fa6';
 
 const SearchUserMessage = ({ fetchData }) => {
   const [searchInput, setSearchInput] = useState('');
@@ -41,6 +42,7 @@ const SearchUserMessage = ({ fetchData }) => {
       );
       setData([]);
     }
+    setSearchInput('');
   };
 
   const refetchUserMessages = async () => {
@@ -93,9 +95,9 @@ const SearchUserMessage = ({ fetchData }) => {
             />
             <Button
               type="submit"
-              className="bg-indigo-500 text-white hover:bg-indigo-600"
+              className="bg-indigo-500 px-4 py-2 text-white hover:bg-indigo-600"
             >
-              Search
+              <FaMagnifyingGlass className="size-6" />
             </Button>
           </div>
         </form>

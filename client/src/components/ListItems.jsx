@@ -1,6 +1,14 @@
 import { useState, useCallback } from 'react';
 import Button from './Button.jsx';
 import axios from 'axios';
+import {
+  FaUser,
+  FaPenToSquare,
+  FaRegTrashCan,
+  FaMinus,
+  FaCheck,
+  FaXmark,
+} from 'react-icons/fa6';
 
 const ListItems = ({ data = [], error, fetchData }) => {
   const [expandedMessages, setExpandedMessages] = useState({});
@@ -74,28 +82,28 @@ const ListItems = ({ data = [], error, fetchData }) => {
               className="bg-green-400 text-white hover:bg-green-600"
               onClick={() => handleSaveMessage(id)}
             >
-              Save
+              <FaCheck className="size-6" />
             </Button>
             <Button
-              className="ml-2 bg-gray-300 text-gray-800 hover:bg-gray-400"
+              className="ml-2 bg-red-400 px-3 text-white hover:bg-red-600"
               onClick={() => handleEditMessage(id)}
             >
-              Cancel
+              <FaXmark className="size-6" />
             </Button>
           </>
         ) : (
           <>
             <Button
-              className="bg-gray-300 text-gray-800 hover:bg-gray-400"
+              className="bg-gray-300 px-3 text-gray-800 hover:bg-gray-400"
               onClick={() => handleEditMessage(id)}
             >
-              Edit
+              <FaPenToSquare className="size-6" />
             </Button>
             <Button
-              className="ml-2 bg-red-400 text-white hover:bg-red-600"
+              className="ml-2 bg-red-400 px-3 text-white hover:bg-red-600"
               onClick={() => handleDeleteMessage(id)}
             >
-              Delete
+              <FaRegTrashCan className="size-6" />
             </Button>
           </>
         )}
@@ -156,8 +164,10 @@ const ListItems = ({ data = [], error, fetchData }) => {
             <p className="mb-4 text-sm text-gray-500">{createAt}</p>
             {renderMessage(message, id, isEditing)}
             <div className="mt-auto flex items-center">
+              <FaUser className="size-5" />
+              <FaMinus className="mx-2 size-5" />
               <p className="mr-auto italic">
-                <strong>{userName}</strong>
+                <strong> {userName}</strong>
               </p>
               {renderActionButtons(id, isEditing)}
             </div>

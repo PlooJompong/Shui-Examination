@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import NewMessage from './components/NewMessage.jsx';
 import SearchUserMessage from './components/SearchUserMessage.jsx';
-import axios from 'axios';
 import Button from './components/Button.jsx';
+import axios from 'axios';
 
 const App = () => {
   const [toggle, setToggle] = useState(false);

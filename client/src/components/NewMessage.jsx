@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import ListItems from './ListItems.jsx';
 import Button from './Button.jsx';
 import axios from 'axios';
-import ListItems from './ListItems.jsx';
+import { FaPlus } from 'react-icons/fa6';
 
 const NewMessage = ({ data, error, fetchData }) => {
   const [formData, setFormData] = useState({ userName: '', message: '' });
@@ -62,9 +63,9 @@ const NewMessage = ({ data, error, fetchData }) => {
         />
         <Button
           type="submit"
-          className="bg-indigo-500 text-white hover:bg-indigo-600"
+          className="bg-indigo-500 px-4 py-2 text-white hover:bg-indigo-600"
         >
-          Create
+          <FaPlus className="size-6" />
         </Button>
       </div>
     </>
