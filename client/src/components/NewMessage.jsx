@@ -20,14 +20,16 @@ const NewMessage = ({ data, error, fetchData }) => {
 
     try {
       await axios.post(
-        'https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages',
+        'https://ggjgn976y7.execute-api.eu-north-1.amazonaws.com/messages',
         formData,
       );
 
       setStatus({ success: 'Message created!', error: null });
       setFormData({ userName: '', message: '' });
 
-      if (fetchData) fetchData();
+      if (fetchData) {
+        fetchData();
+      }
     } catch (error) {
       setStatus({
         success: null,

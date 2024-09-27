@@ -32,7 +32,6 @@ exports.handler = async (event) => {
       ReturnValues: "ALL_NEW"
     }))
 
-
     const updateMessage = reorderObject(result.Attributes)
 
     return sendResponse({ updateMessage })

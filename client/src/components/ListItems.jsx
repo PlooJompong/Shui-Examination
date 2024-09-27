@@ -26,7 +26,7 @@ const ListItems = ({ data = [], error, fetchData }) => {
     async (id) => {
       try {
         await axios.delete(
-          `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
+          `https://ggjgn976y7.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
         );
         fetchData();
       } catch (error) {
@@ -57,7 +57,7 @@ const ListItems = ({ data = [], error, fetchData }) => {
       if (editedMessage !== originalMessage && editedMessage.trim() !== '') {
         try {
           await axios.put(
-            `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
+            `https://ggjgn976y7.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
             { message: editedMessage },
           );
 
@@ -149,6 +149,10 @@ const ListItems = ({ data = [], error, fetchData }) => {
 
   if (error) {
     return <p className="mt-2 text-red-500">{error}</p>;
+  }
+
+  if (data.length === 0) {
+    return <p className="mt-2 text-gray-500">No messages found</p>;
   }
 
   return (

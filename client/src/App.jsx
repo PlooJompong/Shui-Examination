@@ -12,7 +12,7 @@ const App = () => {
   const fetchAllMsg = async () => {
     try {
       const response = await axios.get(
-        'https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages',
+        'https://ggjgn976y7.execute-api.eu-north-1.amazonaws.com/messages',
       );
 
       const { data } = response;

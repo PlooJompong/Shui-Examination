@@ -12,7 +12,7 @@ const SearchUserMessage = () => {
   const fetchUserMessages = async (input) => {
     try {
       const response = await axios.get(
-        `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${input}`,
+        `https://ggjgn976y7.execute-api.eu-north-1.amazonaws.com/messages/${input}`,
       );
 
       const { data } = response;
