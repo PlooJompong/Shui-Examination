@@ -4,10 +4,32 @@ import Button from './Button.jsx';
 import axios from 'axios';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 
-const SearchUserMessage = ({ fetchData }) => {
+const SearchUserMessage = () => {
   const [searchInput, setSearchInput] = useState('');
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+
+  const fetchUserMessages = async (input) => {
+    try {
+      const response = await axios.get(
+        `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${input}`,
+      );
+
+      const { data } = response;
+
+      if (data?.data?.messages) {
+        setData(data.data.messages);
+      } else {
+        setData([]);
+        setError(`username: "${searchInput}" not found`);
+      }
+    } catch (error) {
+      setError(
+        error.response?.data?.message || `username: "${searchInput}" not found`,
+      );
+      setData([]);
+    }
+  };
 
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
@@ -24,47 +46,13 @@ const SearchUserMessage = ({ fetchData }) => {
 
     setError(null);
 
-    try {
-      const response = await axios.get(
-        `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${searchInput}`,
-      );
-
-      const { data } = response;
-      if (data?.data?.messages) {
-        setData(data.data.messages);
-      } else {
-        setData([]);
-        setError(`username: "${searchInput}" not found`);
-      }
-    } catch (error) {
-      setError(
-        error.response?.data?.message || `username: "${searchInput}" not found`,
-      );
-      setData([]);
-    }
+    fetchUserMessages(searchInput);
   };
 
   const refetchUserMessages = async () => {
     setError(null);
 
-    try {
-      const response = await axios.get(
-        `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${searchInput}`,
-      );
-
-      const { data } = response;
-      if (data?.data?.messages) {
-        setData(data.data.messages);
-      } else {
-        setData([]);
-        setError(`username: "${searchInput}" not found`);
-      }
-    } catch (error) {
-      setError(
-        error.response?.data?.message || `username: "${searchInput}" not found`,
-      );
-      setData([]);
-    }
+    fetchUserMessages(searchInput);
   };
 
   return (

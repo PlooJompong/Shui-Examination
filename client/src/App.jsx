@@ -51,7 +51,7 @@ const App = () => {
       {!toggle ? (
         <NewMessage data={data} error={error} fetchData={fetchAllMsg} />
       ) : (
-        <SearchUserMessage fetchData={fetchAllMsg} />
+        <SearchUserMessage />
       )}
     </main>
   );
