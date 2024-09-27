@@ -18,6 +18,40 @@ const NewMessage = ({ data, error, fetchData }) => {
 
     setStatus({ success: null, error: null });
 
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+
+    if (!formData.message && !formData.userName) {
+      setStatus({
+        success: null,
+        error: 'Message and username are required!',
+      });
+      return;
+    }
+
+    if (!formData.message) {
+      setStatus({
+        success: null,
+        error: 'Message is required!',
+      });
+      return;
+    }
+
+    if (formData.userName.length < 2) {
+      setStatus({
+        success: null,
+        error: 'Username must be at least 2 characters long!',
+      });
+      return;
+    }
+
+    if (!usernameRegex.test(formData.userName)) {
+      setStatus({
+        success: null,
+        error: 'Username can only contain letters and numbers!',
+      });
+      return;
+    }
+
     try {
       await axios.post(
         'https://ggjgn976y7.execute-api.eu-north-1.amazonaws.com/messages',
