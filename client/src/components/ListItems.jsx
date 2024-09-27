@@ -26,7 +26,7 @@ const ListItems = ({ data = [], error, fetchData }) => {
     async (id) => {
       try {
         await axios.delete(
-          `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
+          `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
         );
         fetchData();
       } catch (error) {
@@ -57,7 +57,7 @@ const ListItems = ({ data = [], error, fetchData }) => {
       if (editedMessage !== originalMessage && editedMessage.trim() !== '') {
         try {
           await axios.put(
-            `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
+            `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${id}`,
             { message: editedMessage },
           );
 

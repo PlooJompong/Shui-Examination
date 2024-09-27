@@ -26,7 +26,7 @@ const SearchUserMessage = ({ fetchData }) => {
 
     try {
       const response = await axios.get(
-        `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${searchInput}`,
+        `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${searchInput}`,
       );
 
       const { data } = response;
@@ -34,15 +34,14 @@ const SearchUserMessage = ({ fetchData }) => {
         setData(data.data.messages);
       } else {
         setData([]);
-        setError('No messages found for this user');
+        setError(`username: "${searchInput}" not found`);
       }
     } catch (error) {
       setError(
-        error.response?.data?.message || 'No messages found for this user',
+        error.response?.data?.message || `username: "${searchInput}" not found`,
       );
       setData([]);
     }
-    setSearchInput('');
   };
 
   const refetchUserMessages = async () => {
@@ -50,7 +49,7 @@ const SearchUserMessage = ({ fetchData }) => {
 
     try {
       const response = await axios.get(
-        `https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages/${searchInput}`,
+        `https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages/${searchInput}`,
       );
 
       const { data } = response;
@@ -58,11 +57,11 @@ const SearchUserMessage = ({ fetchData }) => {
         setData(data.data.messages);
       } else {
         setData([]);
-        setError('No messages found for this user');
+        setError(`username: "${searchInput}" not found`);
       }
     } catch (error) {
       setError(
-        error.response?.data?.message || 'No messages found for this user',
+        error.response?.data?.message || `username: "${searchInput}" not found`,
       );
       setData([]);
     }
@@ -90,7 +89,7 @@ const SearchUserMessage = ({ fetchData }) => {
               type="text"
               name="userId"
               value={searchInput}
-              placeholder="Enter username"
+              placeholder="Username"
               onChange={handleInputChange}
             />
             <Button

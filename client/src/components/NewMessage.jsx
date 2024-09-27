@@ -20,7 +20,7 @@ const NewMessage = ({ data, error, fetchData }) => {
 
     try {
       await axios.post(
-        'https://dewrtfmmdl.execute-api.eu-north-1.amazonaws.com/messages',
+        'https://s96wqm3xt5.execute-api.eu-north-1.amazonaws.com/messages',
         formData,
       );
 
